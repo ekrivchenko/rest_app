@@ -2,7 +2,7 @@ import json, collections, pymysql, web
 from bson import json_util
 
 urls = (
-    '/user', 'add_user',
+    '/user', 'add_user', #da nahyu mne eto vse nado??
     '/users', 'list_users',
     '/user/(.*)', 'get_user'
 )
