@@ -2,6 +2,7 @@ import json, collections, pymysql, web
 from bson import json_util
 
 urls = (
+
     '/user', 'Users',
     '/user/(.*)', 'User'
 )
