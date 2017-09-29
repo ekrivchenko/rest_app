@@ -70,17 +70,21 @@ class Users:
         cursor = connection.cursor()
         cursor.execute(user_check)
         rows = cursor.fetchall()
+
         print rows
         if not rows:
+
             cursor.execute(add_user)
             connection.commit()
             cursor.close()
             connection.close()
+            
             return 'User "%s" created\n' % uuid
         else:
             cursor.close()
             connection.close()
             return 'User with uuid "%s" exists\n' %uuid
+
 
 
 def json_print(rows, cursor):
