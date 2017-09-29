@@ -64,14 +64,22 @@ class Users:
                                      user='barmaley', password='barmaley', db='test_db')
         data = json.loads(web.data())
         uuid, fn, ln, email = data["uuid"], data["first_name"], data["last_name"], data["email"]
+        user_check = 'SELECT * FROM users WHERE  uuid = "%s"' %uuid
         add_user = 'INSERT INTO users (uuid, first_name, last_name, email, data) ' \
-                   'VALUES ("%s", "%s", "%s"," %s", now())' % (uuid, fn, ln, email)
+                   'VALUES ("%s", "%s", "%s","%s", now())' % (uuid, fn, ln, email)
         cursor = connection.cursor()
-        cursor.execute(add_user)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        return web.created("User %s created " % uuid)
+        cursor.execute(user_check)
+        rows = cursor.fetchall()
+        if rows == None:
+            cursor.execute(add_user)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return web.created("User %s created " % uuid)
+        else:
+            cursor.close()
+            connection.close()
+            return 'user with uuid "%s" exists' %uuid
 
 
 def json_print(rows, cursor):
