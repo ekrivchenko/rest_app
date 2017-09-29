@@ -31,7 +31,7 @@ class User:
         connection.commit()
         cursor.close()
         connection.close()
-        return "user with nickname '%s' is removed" % uuid
+        return 'User with nickname "%s" is removed\n' % uuid
 
     def PUT(self, uuid):
         data = json.loads(web.data())
@@ -44,7 +44,7 @@ class User:
         connection.commit()
         cursor.close()
         connection.close()
-        return "user with nickname '%s' is updated" % uuid
+        return 'User with nickname "%s" is updated\n' % uuid
 
 class Users:
     def GET(self):
@@ -64,14 +64,23 @@ class Users:
                                      user='barmaley', password='barmaley', db='test_db')
         data = json.loads(web.data())
         uuid, fn, ln, email = data["uuid"], data["first_name"], data["last_name"], data["email"]
+        user_check = 'SELECT * FROM users WHERE  uuid = "%s"' %uuid
         add_user = 'INSERT INTO users (uuid, first_name, last_name, email, data) ' \
-                   'VALUES ("%s", "%s", "%s"," %s", now())' % (uuid, fn, ln, email)
+                   'VALUES ("%s", "%s", "%s","%s", now())' % (uuid, fn, ln, email)
         cursor = connection.cursor()
-        cursor.execute(add_user)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        return web.created("User %s created " % uuid)
+        cursor.execute(user_check)
+        rows = cursor.fetchall()
+        print rows
+        if not rows:
+            cursor.execute(add_user)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return 'User "%s" created\n' % uuid
+        else:
+            cursor.close()
+            connection.close()
+            return 'User with uuid "%s" exists\n' %uuid
 
 
 def json_print(rows, cursor):
