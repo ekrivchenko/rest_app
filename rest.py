@@ -31,7 +31,7 @@ class User:
         connection.commit()
         cursor.close()
         connection.close()
-        return "user with nickname '%s' is removed" % uuid
+        return 'User with nickname "%s" is removed\n' % uuid
 
     def PUT(self, uuid):
         data = json.loads(web.data())
@@ -44,7 +44,7 @@ class User:
         connection.commit()
         cursor.close()
         connection.close()
-        return "user with nickname '%s' is updated" % uuid
+        return 'User with nickname "%s" is updated\n' % uuid
 
 class Users:
     def GET(self):
@@ -70,16 +70,21 @@ class Users:
         cursor = connection.cursor()
         cursor.execute(user_check)
         rows = cursor.fetchall()
-        if rows == None:
+
+        print rows
+        if not rows:
+
             cursor.execute(add_user)
             connection.commit()
             cursor.close()
             connection.close()
-            return web.created("User %s created " % uuid)
+            
+            return 'User "%s" created\n' % uuid
         else:
             cursor.close()
             connection.close()
-            return 'user with uuid "%s" exists' %uuid
+            return 'User with uuid "%s" exists\n' %uuid
+
 
 
 def json_print(rows, cursor):
